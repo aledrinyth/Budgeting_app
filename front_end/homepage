@@ -1,1 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
+    <style>
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        th, td {
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #D6EEEE;
+        }
+        </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">WiseWallet</a>
+          <a class="navbar-brand justify-content-end" href="#">
+            <img src="https://png.pngtree.com/png-vector/20190704/ourmid/pngtree-businessman-user-avatar-free-vector-png-image_1538405.jpg" alt="Logo" style="width:40px;" class="rounded-pill">
+          </a>
+        </div>
+    </nav>
+    <br>
+    <h1 style="text-align: center;">August 2023</h1>
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-4 p-4 my-4 border d-flex flex-column align-items-center">
+            <h2 class="text-center mb-4">Overview</h2>
+            <div class="circle d-flex justify-content-center align-items-center" style="height: 200px; width: 200px; background-color: red; border-radius: 50%;">
+              <div class="text-center">
+                <p class="mb-1">Net Savings</p>
+                <h4 class="mb-0">-$101.04</h4>
+              </div>
+            </div>
+          </div>
+          
+        <div class="col-sm-8 bg-secondary p-4 my-4 border">
+            <h3>Net Savings for the Year</h3>
+            <canvas id="myLineChart" style="max-height: 220px;"></canvas>
+            <script>
+                // Get the canvas element
+                var ctx = document.getElementById('myLineChart').getContext('2d');
+              
+                // Define the data for your chart
+                var chartData = {
+                  labels: ['January', 'February', 'March', 'April', 'May'],
+                  datasets: [{
+                    label: 'Savings By Month',
+                    data: [1000, 1500, 1200, 1800, 2000],
+                    backgroundColor: 'white', // Background color of the chart area
+                    borderColor: 'black', // Line color
+                    borderWidth: 2 // Line width
+                  }]
+                };
+              
+                // Create the line chart
+                var myLineChart = new Chart(ctx, {
+                  type: 'line',
+                  data: chartData,
+                  options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'black' // Black color for legend labels
+                                }
+                            }
+                        },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                            color: 'black' // Black color for y-axis labels
+                            }
+                        },
+                        x: {
+                            ticks: {
+                            color: 'black' // Black color for x-axis labels
+                            }
+                        }
+                    }
+                  }
+                });
+              </script>
+        </div>
+    </div>
+    <hr>
+    <div class="container mt-4">
+        <h2 class="text-center">Categories</h2>
+        <br/>
+        <div class="d-flex justify-content-center">
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#foodModal">Food</button>
+            <div class="modal fade" id="foodModal" tabindex="-1" aria-labelledby="foodModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="foodModalLabel">Transactions - Food</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="editableTable">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th></th> <!-- Add an empty header for the delete button column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td contenteditable="true">$20.79</td>
+                                        <td contenteditable="true">20 Aug 2023</td>
+                                        <td contenteditable="true">Birthday Dinner</td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$10.01</td>
+                                        <td contenteditable="true">10 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$5.98</td>
+                                        <td contenteditable="true">2 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            
+                            <script>
+                                function addNewRow() {
+                                    var table = document.getElementById("editableTable").getElementsByTagName('tbody')[0];
+                                    var newRow = table.insertRow(table.rows.length);
+                                    for (var i = 0; i < 3; i++) {
+                                        var cell = newRow.insertCell(i);
+                                        cell.contentEditable = true;
+                                        cell.innerHTML = "";
+                                    }
+                                    var deleteCell = newRow.insertCell(3);
+                                    deleteCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+                                }
+                            
+                                function deleteRow(button) {
+                                    var row = button.parentNode.parentNode; // Get the row containing the button
+                                    row.parentNode.removeChild(row); // Remove the row
+                                }
+                            </script>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#billsModal">Bills</button>
+            <div class="modal fade" id="billsModal" tabindex="-1" aria-labelledby="billsModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="billsModalLabel">Transactions - Bills</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="editableTable">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th></th> <!-- Add an empty header for the delete button column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td contenteditable="true">$20.79</td>
+                                        <td contenteditable="true">20 Aug 2023</td>
+                                        <td contenteditable="true">Birthday Dinner</td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$10.01</td>
+                                        <td contenteditable="true">10 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$5.98</td>
+                                        <td contenteditable="true">2 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            
+                            <script>
+                                function addNewRow() {
+                                    var table = document.getElementById("editableTable").getElementsByTagName('tbody')[0];
+                                    var newRow = table.insertRow(table.rows.length);
+                                    for (var i = 0; i < 3; i++) {
+                                        var cell = newRow.insertCell(i);
+                                        cell.contentEditable = true;
+                                        cell.innerHTML = "";
+                                    }
+                                    var deleteCell = newRow.insertCell(3);
+                                    deleteCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+                                }
+                            
+                                function deleteRow(button) {
+                                    var row = button.parentNode.parentNode; // Get the row containing the button
+                                    row.parentNode.removeChild(row); // Remove the row
+                                }
+                            </script>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#transportModal">Transport</button>
+            <div class="modal fade" id="transportModal" tabindex="-1" aria-labelledby="transportModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="transportModalLabel">Transactions - Transport</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="editableTable">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th></th> <!-- Add an empty header for the delete button column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td contenteditable="true">$20.79</td>
+                                        <td contenteditable="true">20 Aug 2023</td>
+                                        <td contenteditable="true">Birthday Dinner</td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$10.01</td>
+                                        <td contenteditable="true">10 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$5.98</td>
+                                        <td contenteditable="true">2 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            
+                            <script>
+                                function addNewRow() {
+                                    var table = document.getElementById("editableTable").getElementsByTagName('tbody')[0];
+                                    var newRow = table.insertRow(table.rows.length);
+                                    for (var i = 0; i < 3; i++) {
+                                        var cell = newRow.insertCell(i);
+                                        cell.contentEditable = true;
+                                        cell.innerHTML = "";
+                                    }
+                                    var deleteCell = newRow.insertCell(3);
+                                    deleteCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+                                }
+                            
+                                function deleteRow(button) {
+                                    var row = button.parentNode.parentNode; // Get the row containing the button
+                                    row.parentNode.removeChild(row); // Remove the row
+                                }
+                            </script>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#healthModal">Healthcare</button>
+            <div class="modal fade" id="healthModal" tabindex="-1" aria-labelledby="healthModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="healthModalLabel">Transactions - Healthcare</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="editableTable">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th></th> <!-- Add an empty header for the delete button column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td contenteditable="true">$20.79</td>
+                                        <td contenteditable="true">20 Aug 2023</td>
+                                        <td contenteditable="true">Birthday Dinner</td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$10.01</td>
+                                        <td contenteditable="true">10 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$5.98</td>
+                                        <td contenteditable="true">2 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <script>
+                                function addNewRow() {
+                                    var table = document.getElementById("editableTable").getElementsByTagName('tbody')[0];
+                                    var newRow = table.insertRow(table.rows.length);
+                                    for (var i = 0; i < 3; i++) {
+                                        var cell = newRow.insertCell(i);
+                                        cell.contentEditable = true;
+                                        cell.innerHTML = "";
+                                    }
+                                    var deleteCell = newRow.insertCell(3);
+                                    deleteCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+                                }
+                            
+                                function deleteRow(button) {
+                                    var row = button.parentNode.parentNode; // Get the row containing the button
+                                    row.parentNode.removeChild(row); // Remove the row
+                                }
+                            </script>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#houseModal">House</button>
+            <div class="modal fade" id="houseModal" tabindex="-1" aria-labelledby="houseModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="houseModalLabel">Transactions - House</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="editableTable">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th></th> <!-- Add an empty header for the delete button column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td contenteditable="true">$20.79</td>
+                                        <td contenteditable="true">20 Aug 2023</td>
+                                        <td contenteditable="true">Birthday Dinner</td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$10.01</td>
+                                        <td contenteditable="true">10 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$5.98</td>
+                                        <td contenteditable="true">2 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            
+                            <script>
+                                function addNewRow() {
+                                    var table = document.getElementById("editableTable").getElementsByTagName('tbody')[0];
+                                    var newRow = table.insertRow(table.rows.length);
+                                    for (var i = 0; i < 3; i++) {
+                                        var cell = newRow.insertCell(i);
+                                        cell.contentEditable = true;
+                                        cell.innerHTML = "";
+                                    }
+                                    var deleteCell = newRow.insertCell(3);
+                                    deleteCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+                                }
+                            
+                                function deleteRow(button) {
+                                    var row = button.parentNode.parentNode; // Get the row containing the button
+                                    row.parentNode.removeChild(row); // Remove the row
+                                }
+                            </script>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#savingsModal">Savings</button>
+            <div class="modal fade" id="savingsModal" tabindex="-1" aria-labelledby="savingsModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="savingsModalLabel">Transactions - Savings</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table id="editableTable">
+                                <thead>
+                                    <tr>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th></th> <!-- Add an empty header for the delete button column -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td contenteditable="true">$20.79</td>
+                                        <td contenteditable="true">20 Aug 2023</td>
+                                        <td contenteditable="true">Birthday Dinner</td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$10.01</td>
+                                        <td contenteditable="true">10 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td contenteditable="true">$5.98</td>
+                                        <td contenteditable="true">2 Aug 2023</td>
+                                        <td contenteditable="true"></td>
+                                        <td><button onclick="deleteRow(this)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            
+                            <script>
+                                function addNewRow() {
+                                    var table = document.getElementById("editableTable").getElementsByTagName('tbody')[0];
+                                    var newRow = table.insertRow(table.rows.length);
+                                    for (var i = 0; i < 3; i++) {
+                                        var cell = newRow.insertCell(i);
+                                        cell.contentEditable = true;
+                                        cell.innerHTML = "";
+                                    }
+                                    var deleteCell = newRow.insertCell(3);
+                                    deleteCell.innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+                                }
+                            
+                                function deleteRow(button) {
+                                    var row = button.parentNode.parentNode; // Get the row containing the button
+                                    row.parentNode.removeChild(row); // Remove the row
+                                }
+                            </script>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <br/>
+        <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTransactionModal">+Add New Transaction</button>
+          </div>
+
+        <div class="modal fade" id="addTransactionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New Transaction</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label for="amount" class="form-label">Amount:</label>
+                    <input type="text" placeholder="Enter amount here ($)" class="form-control" id="amount" name="amount" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="category" class="form-label">Category:</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="" disabled selected>Select a Category below:</option>
+                        <option value="category1">Food</option>
+                        <option value="category2">Bills</option>
+                        <option value="category3">Transport</option>
+                        <option value="category4">Healthcare</option>
+                        <option value="category5">House</option>
+                        <option value="category6">Savings</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="message" class="form-label">Description:</label>
+                    <textarea class="form-control" placeholder="Add description here" id="message" name="message" rows="4"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</body>
+</html>
 
